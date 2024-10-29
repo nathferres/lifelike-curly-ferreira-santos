@@ -1,0 +1,6 @@
+/* src/components/ItemListContainer.css */
+.item-list-container {
+    background-color: #f8f9fa; /* Cor de fundo leve */
+    border: 1px solid #ddd; /* Borda leve */
+    margin: 20px; /* Margem em volta do container */
+}

@@ -1,0 +1,39 @@
+.navbar {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+}
+
+.categories {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.categories li {
+    display: inline;
+}
+
+.categories a {
+    color: white;
+    text-decoration: none;
+}
+
+.categories a:hover {
+    text-decoration: underline;}
+
+
+    .cart-widget {
+        display: flex;
+        align-items: center;
+        color: white;
+        cursor: pointer;
+    }
+    
+    .cart-count {
+        margin-left: 5px;
+        font-weight: bold;
+    }
