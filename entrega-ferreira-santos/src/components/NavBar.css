@@ -3,8 +3,8 @@
     justify-content: start;
     align-items: center;
     padding: 10px 20px;
-    background-color: #333;
-    color: white;
+    background-color: #DCE0D9;
+    color: #808000;
 }
 
 .categories {
@@ -15,10 +15,11 @@
 
 .categories li {
     display: inline;
+    color: #2F2504;
 }
 
 .categories a {
-    color: white;
+    color: #DCE0D9;
     text-decoration: none;
 }
 
@@ -29,7 +30,7 @@
     .cart-widget {
         display: flex;
         align-items: center;
-        color: white;
+        color: olive;
         cursor: pointer;
     }
     

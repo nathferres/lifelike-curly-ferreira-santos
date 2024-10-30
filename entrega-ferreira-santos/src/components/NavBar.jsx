@@ -12,7 +12,7 @@ const NavBar = () => {
                     <li className="nav-item"><a className="nav-link" href="#categoria1">Kits Hidratantes</a></li>
                     <li className="nav-item"><a className="nav-link" href="#categoria2">Óleos</a></li>
                     <li className="nav-item"><a className="nav-link" href="#categoria3">Manteigas</a></li>
-                    <li className="nav-item"><a className="nav-link" href="#categoria4">Shamppoos</a></li>
+                    <li className="nav-item"><a className="nav-link" href="#categoria4">Shampoos</a></li>
                 </ul>
                 <CartWidget /> {/* Adicionando o CartWidget */}
             </div>
