@@ -1,13 +1,28 @@
 // src/components/ItemListContainer.js
-import React from 'react';
-import './ItemListContainer.css'; // Para estilização
+import { useEffect, useState } from 'react';
+import ItemList from './ItemList';
+import { useParams } from 'react-router-dom';
+import { getItems } from '../services/itemService'; // Mock async service
 
-const ItemListContainer = ({ greeting }) => {
-    return (
-        <div className="item-list-container text-center p-4">
-            <h2>{greeting}</h2>
-        </div>
-    );
-};
+function ItemListContainer() {
+  const { categoryId } = useParams();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getItems(categoryId).then(data => {
+      setItems(data);
+      setLoading(false);
+    });
+  }, [categoryId]);
+
+  return (
+    <div className="container">
+      <h1>{categoryId ? `Categoria: ${categoryId}` : 'Todos os Produtos'}</h1>
+      {loading ? <p>Carregando...</p> : <ItemList items={items} />}
+    </div>
+  );
+}
 
 export default ItemListContainer;

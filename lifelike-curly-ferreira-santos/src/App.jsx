@@ -1,14 +1,22 @@
-import React from 'react';
+import { CartProvider } from './context/CartContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import ItemListContainer from './components/ItemListContainer';
+import ItemDetailContainer from './components/ItemDetailContainer';
 
-const App = () => {
-    return (
-        <div>
-            <NavBar />
-            <ItemListContainer greeting="Bem-vindo à nossa loja!" />
-        </div>
-    );
-};
+function App() {
+  return (
+    <CartProvider>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<ItemListContainer />} />
+          <Route path="/category/:categoryId" element={<ItemListContainer />} />
+          <Route path="/item/:id" element={<ItemDetailContainer />} />
+        </Routes>
+      </Router>
+    </CartProvider>
+  );
+}
 
 export default App;

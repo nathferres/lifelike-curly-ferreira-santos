@@ -1,14 +1,21 @@
 // src/components/CartWidget.js
-import React from 'react';
-import { FaShoppingCart } from 'react-icons/fa'; // Importando ícone de carrinho
+import { Link } from 'react-router-dom';
+import { FaShoppingCart } from 'react-icons/fa';
+import { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 
-const CartWidget = () => {
-    return (
-        <div className="cart-widget d-flex align-items-center">
-            <FaShoppingCart size={24} />
-            <span className="cart-count ms-2">0</span> {/* Contador de itens */}
-        </div>
-    );
-};
+function CartWidget() {
+  const { cart } = useContext(CartContext);
+
+  return (
+    <Link to="/cart" className="d-flex align-items-center">
+      <FaShoppingCart size={24} />
+      {cart.length > 0 && (
+        <span className="badge bg-danger ms-2">{cart.length}</span>
+      )}
+    </Link>
+  );
+}
 
 export default CartWidget;
+
