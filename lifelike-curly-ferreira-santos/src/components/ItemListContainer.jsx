@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import ItemList from './ItemList';
 import { useParams } from 'react-router-dom';
-import { getItems } from '../services/itemService'; // Mock async service
+import { getItems } from '../services/itemService'; 
+import './assets/styles/ItemListContainer.css';
 
 function ItemListContainer() {
   const { categoryId } = useParams();
