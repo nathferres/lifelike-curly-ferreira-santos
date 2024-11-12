@@ -1,6 +1,11 @@
-/* src/components/ItemListContainer.css */
+/* src/assets/styles/ItemListContainer.css */
 .item-list-container {
-    background-color: #f8f9fa; /* Cor de fundo leve */
-    border: 1px solid #ddd; /* Borda leve */
-    margin: 20px; /* Margem em volta do container */
-}
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .item-list-container h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
