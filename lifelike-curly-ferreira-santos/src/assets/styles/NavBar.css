@@ -17,3 +17,9 @@
   .navbar .nav-link:hover {
     color: #dce0d9; /* Usando Platinum para o hover das nav links */
   }
+
+  img{
+    width: 65px;
+    height: 65px;
+    margin-right: 5px;
+  }
