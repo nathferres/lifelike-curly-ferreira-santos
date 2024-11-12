@@ -1,11 +1,7 @@
-/* src/assets/styles/ItemListContainer.css */
-.item-list-container {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .item-list-container h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
+/* Container principal */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
   

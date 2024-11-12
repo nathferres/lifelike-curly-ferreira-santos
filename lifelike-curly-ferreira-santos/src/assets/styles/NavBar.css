@@ -1,40 +1,19 @@
-.navbar {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #DCE0D9;
-    color: #808000;
-}
-
-.categories {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-.categories li {
-    display: inline;
-    color: #2F2504;
-}
-
-.categories a {
-    color: #DCE0D9;
-    text-decoration: none;
-}
-
-.categories a:hover {
-    text-decoration: underline;}
-
-
-    .cart-widget {
-        display: flex;
-        align-items: center;
-        color: olive;
-        cursor: pointer;
-    }
-    
-    .cart-count {
-        margin-left: 5px;
-        font-weight: bold;
-    }
+.custom-navbar {
+    background-color: #2f2504; /* Usando Drab Dark Brown para o fundo da navbar */
+    color: #fff;
+    padding: 10px 0;
+  }
+  
+ .navbar-brand {
+    color: #fff;
+    font-size: 1.8rem;
+  }
+  
+  .navbar .nav-link {
+    color: #fff;
+    margin-right: 15px;
+  }
+  
+  .navbar .nav-link:hover {
+    color: #dce0d9; /* Usando Platinum para o hover das nav links */
+  }

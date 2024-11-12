@@ -6,13 +6,14 @@ import '../assets/styles/NavBar.css';
 
 function NavBar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg custom-navbar">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">E-Commerce</Link>
+        <Link className="navbar-brand" to="/">Lifelike Curly</Link>
         <div className="d-flex">
           <Link to="/" className="nav-link">Home</Link>
-          <Link to="/category/electronics" className="nav-link">Electronics</Link>
-          <Link to="/category/furniture" className="nav-link">Furniture</Link>
+          <Link to="/category/electronics" className="nav-link">Óleos</Link>
+          <Link to="/category/furniture" className="nav-link">Kit Detox</Link>
+          <Link to="/category/furniture" className="nav-link">Kit Hidratantes</Link>
           <CartWidget />
         </div>
       </div>
