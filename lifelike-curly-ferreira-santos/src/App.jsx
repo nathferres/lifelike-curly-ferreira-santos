@@ -1,6 +1,6 @@
 // src/App.js
 import React from 'react';
-import './assets/styles/App.css'; // Importando o arquivo de estilos globais
+import "./assets/styles/App.css"; // Importando o arquivo de estilos globais
 import NavBar from './components/NavBar';
 import ItemListContainer from './components/ItemListContainer';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
