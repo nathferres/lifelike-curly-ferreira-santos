@@ -1,20 +1,19 @@
 // src/services/itemService.js
-import { db, collection, getDocs } from '../firebase';
+import { db, collection, getDocs } from "../firebase";  // Certifique-se de que está importando corretamente
 
 export async function getItems(categoryId) {
-  const itemsCollection = collection(db, 'items');
-  const snapshot = await getDocs(itemsCollection);
-  const itemsList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  try {
+    const itemsCollection = collection(db, "items");  // Usa a instância do Firestore para acessar a coleção 'items'
+    const snapshot = await getDocs(itemsCollection);  // Obtém os documentos da coleção
+    const itemsList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    
+    if (categoryId) {
+      return itemsList.filter((item) => item.category === categoryId);  // Filtra por categoria, se fornecida
+    }
 
-  if (categoryId) {
-    return itemsList.filter((item) => item.category === categoryId);
+    return itemsList;  // Retorna todos os produtos
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    throw error;
   }
-
-  return itemsList;
-}
-
-export async function getItemById(id) {
-  const itemDoc = doc(db, 'items', id);
-  const snapshot = await getDoc(itemDoc);
-  return { id: snapshot.id, ...snapshot.data() };
 }

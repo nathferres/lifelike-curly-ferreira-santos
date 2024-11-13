@@ -12,11 +12,11 @@ function NavBar() {
         <Link className="navbar-brand" to="/">Lifelike Curly</Link>
         <div className="d-flex">
           <Link to="/" className="nav-link">Home</Link>
-          <Link to="/category/furniture" className="nav-link">Kit Detox</Link>
-          <Link to="/category/furniture" className="nav-link">Kit Hidratantes</Link>
-          <Link to="/category/furniture" className="nav-link">Manteigas</Link>
-          <Link to="/category/electronics" className="nav-link">Óleos</Link>
-          <Link to="/category/electronics" className="nav-link">Quem Somos</Link>
+          <Link to="/category/kits" className="nav-link">Kit Detox</Link>
+          <Link to="/category/kits" className="nav-link">Kit Hidratantes</Link>
+          <Link to="/category/manteigas" className="nav-link">Manteigas</Link>
+          <Link to="/category/óleos" className="nav-link">Óleos</Link>
+          <Link to="/quem somos" className="nav-link">Quem Somos</Link>
           <CartWidget />
         </div>
       </div>
