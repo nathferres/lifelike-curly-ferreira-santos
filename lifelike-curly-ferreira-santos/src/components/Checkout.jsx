@@ -1,93 +1,78 @@
-// src/components/Checkout.js
-import { useState } from 'react';
-import { useCart } from '../context/CartContext';
-import { createOrder } from '../services/orderService'; // Importando a função do Firestore
+import React, { useContext } from "react";
+import { addDoc, collection } from "firebase/firestore/lite";
+import CartContext from "../context/CartContext";
+/*import ItemTable from "./ItemTable"; */ 
+import { useAuth } from "../context/AuthContext";
+import { db } from "../Firebase";
 
-function Checkout() {
-  const { cart, clear } = useCart();
-  const [buyerData, setBuyerData] = useState({ name: '', phone: '', email: '' });
-  const [loading, setLoading] = useState(false);
-  const [orderId, setOrderId] = useState(null);
+const ItemRow = ({ quantity, title, total, onClick }) => {
+  return (
+    <tr>
+      <td>{quantity} X</td>
+      <td>{title}</td>
+      <td>${total}</td>
+      <td>
+        <span onClick={onClick}>Remove</span>
+      </td>
+    </tr>
+  );
+};
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setBuyerData((prev) => ({ ...prev, [name]: value }));
-  };
+export default function Checkout() {
+  const { cart, dispatch } = useContext(CartContext);
+  const { currentUser } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const orderData = {
-      buyer: buyerData,
-      items: cart,
-      total: cart.reduce((acc, item) => acc + item.price * item.quantity, 0),
-      date: new Date(),
-    };
+  const total = cart
+    ?.reduce((prevItem, nextItem) => prevItem + nextItem.quantity * nextItem.price, 0)
+    .toFixed(2);
 
-    try {
-      const orderId = await createOrder(orderData);
-      setOrderId(orderId);
-      clear(); // Limpar o carrinho após a compra
-    } catch (error) {
-      console.error("Erro ao criar pedido:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleOrder = () => {
+    (async function () {
+      const newOrder = {
+        buyer: {
+          name: "Thales",
+          email: "dev.thales.avila@gmail.com",
+          id: currentUser.uid,
+        },
+        items: cart,
+        total,
+      };
+
+      const ordersCollection = collection(db, "orders");
+
+      const createdOrder = await addDoc(ordersCollection, newOrder);
+
+      dispatch({
+        type: "resetCart",
+      });
+    })();
   };
 
   return (
-    <div className="container">
-      <h1>Finalizar Compra</h1>
-      {orderId ? (
-        <div>
-          <h2>Pedido finalizado com sucesso!</h2>
-          <p>ID do Pedido: {orderId}</p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="name">Nome:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="form-control"
-              value={buyerData.name}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phone">Telefone:</label>
-            <input
-              type="text"
-              id="phone"
-              name="phone"
-              className="form-control"
-              value={buyerData.phone}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">E-mail:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="form-control"
-              value={buyerData.email}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-success mt-3" disabled={loading}>
-            {loading ? 'Processando...' : 'Finalizar Compra'}
-          </button>
-        </form>
-      )}
+    <div>
+      <h2>Checkout</h2>
+      <ItemTable>
+      {cart?.map((item, index) => (
+  <ItemRow
+    key={item.id || index}  /* Usando o id, ou fallback para o índice */
+    quantity={item.quantity}
+    title={item.title}
+    total={(item.price * item.quantity).toFixed(2)}
+    onClick={() => {
+      dispatch({
+        type: "removeItem",
+        itemId: item.id, 
+      });
+    }}
+  />
+))}
+      </ItemTable>
+      <div>
+        <span>Total: ${total}</span>
+        <button onClick={handleOrder}>Comprar</button>
+      </div>
     </div>
   );
 }
 
-export default Checkout;
+export { Checkout };

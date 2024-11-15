@@ -1,41 +1,79 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useReducer } from "react";
 
-// Cria o contexto
-const CartContext = createContext();
+const CartContext = createContext([]);
 
-// Provider do contexto
-function CartProvider({ children }) {
-  const [cart, setCart] = useState([]);
+import React from "react";
 
-  const addItem = (item, quantity) => {
-    setCart(prev => {
-      const existingItem = prev.find(p => p.id === item.id);
-      if (existingItem) {
-        return prev.map(p =>
-          p.id === item.id ? { ...p, quantity: p.quantity + quantity } : p
-        );
-      } else {
-        return [...prev, { ...item, quantity }];
-      }
-    });
-  };
+const cartReducer = (cart, action) => {
+  switch (action.type) {
+    case "addItem": {
+      let newCart;
 
-  const removeItem = (itemId) => {
-    setCart(cart.filter(item => item.id !== itemId));
-  };
+      // Checar se o item já existe no carrinho
+      const existsInCart = cart?.some(
+        (cartItem) => cartItem.id === action.item.id
+      );
 
-  const clear = () => {
-    setCart([]);
-  };
+      newCart = [...cart, action.item];
+
+      console.log({ existsInCart });
+
+      localStorage.setItem("cart", JSON.stringify(newCart));
+      return newCart;
+    }
+
+    case "removeItem": {
+      const filteredCart = cart.filter(
+        (item) => item.id !== action.itemId
+      );
+      localStorage.setItem("cart", JSON.stringify(filteredCart));
+      return filteredCart;
+    }
+
+    case "changeItemQuantity": {
+      const updatedCart = cart.map((item) => {
+        if (item.id !== action.item.id) {
+          return item;
+        }
+        if (item.id === action.item.id) {
+          return {
+            ...item,
+            quantity: action.item.newQuantity,
+          };
+        }
+      });
+
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    }
+
+    case "resetCart": {
+      localStorage.setItem("cart", JSON.stringify([]));
+      return [];
+    }
+
+    default:
+      break;
+  }
+};
+
+const initializeState = () => {
+  return JSON.parse(localStorage.getItem("cart"));
+};
+
+export function CartProvider({ children }) {
+  const [cart, dispatch] = useReducer(cartReducer, initializeState() || []);
 
   return (
-    <CartContext.Provider value={{ cart, addItem, removeItem, clear }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        dispatch,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
 }
 
-// Custom Hook
-const useCart = () => useContext(CartContext);
-
-export { CartContext, CartProvider, useCart };
+export default CartContext;

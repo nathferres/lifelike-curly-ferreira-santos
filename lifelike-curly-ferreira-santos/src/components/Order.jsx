@@ -1,8 +1,10 @@
-import { useContext } from "react"; 
-import CartContext from "../context/CartContext";
-import ItemTable from "./ItemTable";  // Renomeado para ItemTable
+import { doc, getDoc, updateDoc } from "firebase/firestore/lite";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { db } from "../Firebase";
+import ItemTable from "./ItemTable";
 
-const ItemRow = ({ quantity, title, total, onClick, onChange }) => {  // Renomeado para ItemRow
+const OrderRow = ({ quantity, title, total, onClick, onChange }) => {
   return (
     <tr>
       <td>
@@ -11,7 +13,6 @@ const ItemRow = ({ quantity, title, total, onClick, onChange }) => {  // Renomea
             type="button"
             id="decrement-button"
             data-input-counter-decrement="quantity-input"
-
             onClick={() => {
               onChange(quantity - 1);
             }}
@@ -38,7 +39,7 @@ const ItemRow = ({ quantity, title, total, onClick, onChange }) => {  // Renomea
             aria-describedby="helper-text-explanation"
             value={quantity}
             onChange={(e) => {
-              onChange(e.target.value);
+              onChange(Number(e.target.value));
             }}
             required
           />
@@ -67,63 +68,93 @@ const ItemRow = ({ quantity, title, total, onClick, onChange }) => {  // Renomea
           </button>
         </div>
       </td>
+      <td>{title}</td>
+      <td>${total}</td>
       <td>
-        {title}
-      </td>
-      <td>
-        ${total}
-      </td>
-      <td>
-        <span onClick={onClick}>
-          Remove
-        </span>
+        <span onClick={onClick}>Remove</span>
       </td>
     </tr>
   );
 };
 
-export default function Cart() {
-  const { cart, dispatch } = useContext(CartContext);
+export default function Order() {
+  const { orderId } = useParams();
+  const [order, setOrder] = useState(false);
 
-  const total = cart
-    ?.reduce((prevItem, currItem) => {  // Alterado para item
+  const total = order?.items
+    ?.reduce((prevItem, currItem) => {
       return prevItem + currItem.quantity * currItem.price;
     }, 0)
     .toFixed(2);
 
+  useEffect(() => {
+    (async function () {
+      const docRef = doc(db, "orders", orderId);
+
+      const orderSnapshot = await getDoc(docRef);
+
+      const orderData = orderSnapshot.data();
+
+      setOrder(orderData);
+    })();
+  }, [orderId]);
+
+  const handleUpdate = () => {
+    const orderRef = doc(db, "orders", orderId);
+
+    updateDoc(orderRef, {
+      ...order,
+    });
+  };
+
+  const removeItem = (id) => {
+    const newOrder = {
+      ...order,
+      items: order?.items?.filter((item) => {
+        return item.id !== id;
+      }),
+    };
+    setOrder(newOrder);
+  };
+
+  const updateQuantity = (id, newQuantity) => {
+    const newOrder = {
+      ...order,
+      items: order?.items?.map((item) => {
+        if (item.id !== id) {
+          return item;
+        }
+        return {
+          ...item,
+          quantity: newQuantity,
+        };
+      }),
+    };
+    setOrder(newOrder);
+  };
+
   return (
     <div>
-      <h2>
-        Cart
-      </h2>
-      <ItemTable>  // Alterado para ItemTable
-        {cart?.map(({ id, quantity, title, price }) => (
-          <ItemRow  // Alterado para ItemRow
+      <ItemTable>
+        {order?.items?.map(({ id, quantity, title, price }) => (
+          <OrderRow
+            key={id}
             quantity={quantity}
             name={title}
-            total={(price * quantity).toFixed(2)}
-            onClick={() => {
-              dispatch({
-                type: "removeItem",
-                itemId: id,  // Alterado para itemId
-              });
-            }}
+            total={(quantity * price).toFixed(2)}
             onChange={(newQuantity) => {
-              console.log({ id, newQuantity, title, price });
-
-              dispatch({
-                type: "changeItemQuantity",  // Alterado para changeItemQuantity
-                item: { id, newQuantity: Number(newQuantity), title, price },  // Alterado para item
-              });
+              updateQuantity(id, newQuantity);
+            }}
+            onClick={() => {
+              removeItem(id);
             }}
           />
         ))}
       </ItemTable>
       <div>
         <span>Total: ${total}</span>
+        <button onClick={handleUpdate}>Atualizar</button>
       </div>
     </div>
   );
 }
-
-export { Cart };

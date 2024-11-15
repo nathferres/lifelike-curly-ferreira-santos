@@ -1,25 +1,78 @@
+/* NavBar principal */
 .custom-navbar {
-    background-color: #2f2504; /* Usando Drab Dark Brown para o fundo da navbar */
-    color: #fff;
-    padding: 10px 0;
-  }
-  
- .navbar-brand {
-    color: #fff;
-    font-size: 1.8rem;
-  }
-  
-  .navbar .nav-link {
-    color: #fff;
-    margin-right: 15px;
-  }
-  
-  .navbar .nav-link:hover {
-    color: #dce0d9; /* Usando Platinum para o hover das nav links */
-  }
+  background-color: #2f2504; /* Cor do fundo da navbar */
+  color: #dce0d9;
+  padding: 10px 20px;
+}
 
-  img{
-    width: 65px;
-    height: 65px;
-    margin-right: 5px;
-  }
+/* Contêiner da navbar */
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Logo e nome da marca */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+/* Logo */
+.navbar-logo {
+  width: 40px; /* Ajuste o tamanho da logo */
+  height: auto;
+  margin-right: 10px; /* Espaço entre logo e o nome */
+}
+
+/* Nome da marca */
+.brand-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #dce0d9;
+  text-decoration: none;
+}
+
+/* Links de navegação */
+.navbar-links {
+  display: flex;
+}
+
+.navbar-links a {
+  color: #dce0d9;
+  margin-right: 15px;
+  text-decoration: none;
+}
+
+.navbar-links a:hover {
+  color: #dce0d9; /* Cor do hover */
+}
+
+/* Menu do usuário */
+.navbar-user {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.dropdown-menu {
+  background-color: #333;
+  color: #dce0d9;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  padding: 10px;
+  display: none;
+}
+
+.navbar-user:hover .dropdown-menu {
+  display: block;
+}
+

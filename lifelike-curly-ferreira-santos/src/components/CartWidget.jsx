@@ -1,15 +1,52 @@
-import { useContext } from 'react';
-import { CartContext } from '../context/CartContext';
+import { useContext, useState } from "react";
+import CartContext from "../context/CartContext";
 
-function CartWidget() {
-  const { cart } = useContext(CartContext);  // Acesso ao contexto
+function CartWidget({ id, title, quantity }) {  // Renomeado de CartItem para CartWidget
+  const [isEditing, setEditing] = useState(false);
+  const { cart, dispatch } = useContext(CartContext);
+
+  const handleRemoveItem = (itemId) => {  // Renomeado de productId para itemId
+    dispatch({
+      type: "removeItem",
+      itemId,  // Renomeado para itemId
+    });
+  };
+
+  const handleChangeQuantity = (e) => {
+    const newQuantity = Number(e.target.value);
+
+    dispatch({
+      type: "changeItemQuantity",
+      item: {  // Renomeado para item
+        id,
+        newQuantity,
+      },
+    });
+  };
 
   return (
-    <div>
-      {/* Exemplo de renderização */}
-      <span>{cart.length > 0 ? cart.length : ''}</span>
-    </div>
+    <li>
+      {`${title}`}
+      {!isEditing && ` X ${quantity}`}
+      {isEditing && (
+        <input onChange={handleChangeQuantity} value={quantity} type="number" />
+      )}
+      <button
+        onClick={() => {
+          handleRemoveItem(id);
+        }}
+      >
+        Remover
+      </button>
+      <button
+        onClick={() => {
+          setEditing(!isEditing);
+        }}
+      >
+        {!isEditing ? "Editar" : "Confirmar"}
+      </button>
+    </li>
   );
 }
 
-export default CartWidget;
+export { CartWidget };  // Renomeado para CartWidget
