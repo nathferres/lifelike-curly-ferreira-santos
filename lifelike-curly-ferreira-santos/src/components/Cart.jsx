@@ -100,7 +100,7 @@ export default function Cart() {
         {cart?.map(({ id, quantity, title, price }) => (
           <ItemRow  // Alterado para ItemRow
             quantity={quantity}
-            name={title}
+            title={title}
             total={(price * quantity).toFixed(2)}
             onClick={() => {
               dispatch({

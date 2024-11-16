@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { addDoc, collection } from "firebase/firestore/lite";
 import CartContext from "../context/CartContext";
-/*import ItemTable from "./ItemTable"; */ 
+import ItemTable from "./ItemTable";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../Firebase";
 

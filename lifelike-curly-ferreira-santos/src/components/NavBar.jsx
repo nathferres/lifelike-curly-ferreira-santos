@@ -37,9 +37,9 @@ function NavBar() {
           <Link to="/">Home</Link>
           <Link to="/category/Manteigas">Manteigas</Link>
           <Link to="/category/Óleos">Óleos</Link>
-          <Link to="/cart">Cart</Link>
-          <Link to="/checkout">Checkout</Link>
-          <Link to="/orders">Orders</Link>
+          <Link to="/cart">Carrinho</Link>
+          <Link to="/orders">Pedidos</Link>
+          <Link to="/checkout">Finalizar Compra</Link>
         </div>
 
         {/* Menu de usuário */}
