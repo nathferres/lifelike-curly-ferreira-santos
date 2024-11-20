@@ -46,4 +46,5 @@ const ItemRow = ({ id, quantity, title, total, categoryId, description, onClick,
   );
 };
 
+
 export default ItemRow;

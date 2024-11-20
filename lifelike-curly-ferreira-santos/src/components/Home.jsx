@@ -1,74 +1,61 @@
-// Home.jsx
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore/lite";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import ItemLink from "../ItemLink";  // Certifique-se de que o caminho está correto
-import { db } from "../Firebase";
+import { db } from "../Firebase";  // Supondo que o seu db esteja configurado corretamente
 
-// Componente para exibir botões de categorias
-const CategoryButton = ({ categoryName }) => (
-  <Link to={`category/${categoryName}`}>
-    <button>{categoryName}</button>
-  </Link>
-);
+export function Home() {  // Componente de Home
+  const [items, setItems] = useState([]);  // Armazenando os itens
+  const [loading, setLoading] = useState(false);  // Controle de loading
+  const [error, setError] = useState(null);  // Estado para armazenar erros
 
-export function Home() {  // Exportação nomeada
-  const [items, setItems] = useState([]);  // Substituímos 'products' por 'items'
-  const [loading, setLoading] = useState(false);
-  const { currentUser } = useAuth();
-
-  // Hook para buscar os dados dos itens do Firebase
   useEffect(() => {
-    setLoading(true);
+    setLoading(true);  // Definindo como "carregando" antes de começar a consulta
     (async function () {
       try {
-        const itemsCol = collection(db, "items"); // Coleção no Firestore
-        const itemsSnapshot = await getDocs(itemsCol);
+        const itemsCol = collection(db, "items");  // Ref para a coleção 'items'
+        const itemsSnapshot = await getDocs(itemsCol);  // Consulta assíncrona no Firestore
+        
+        if (itemsSnapshot.empty) {
+          console.log("Nenhum item encontrado no Firestore");
+        } else {
+          // Mapeando os documentos da coleção para obter os dados
+          const itemsList = itemsSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
 
-        // Mapear os itens para adicionar o ID e os dados
-        const items = itemsSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setItems(items);
+          console.log("Itens recebidos do Firebase:", itemsList);  // Log para debug
+          setItems(itemsList);  // Atualizando o estado com os dados
+        }
       } catch (error) {
-        console.error("Erro ao buscar itens:", error);
+        console.error("Erro ao buscar itens:", error);  // Log detalhado de erro
+        setError("Houve um erro ao carregar os itens. Tente novamente mais tarde.");  // Atualiza o estado de erro
       } finally {
-        setLoading(false);
+        setLoading(false);  // Definindo como "não carregando" após o término da consulta
       }
     })();
-  }, []);
-
-  // Função para formatar o preço em formato monetário
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(price);
-  };
+  }, []);  // O array vazio garante que essa consulta aconteça apenas uma vez, ao montar o componente
 
   return (
     <div>
       {loading && <h1>Carregando...</h1>}
+      {error && <h1>{error}</h1>} {/* Exibindo erro, se houver */}
       <div>
         <h2>Itens Disponíveis</h2>
-        {/* Exibindo lista de produtos com base nos dados do Firebase */}
+        {/* Exibindo lista de itens */}
         <div>
-          {!loading &&
+          {!loading && !error && items.length > 0 ? (
             items.map((item) => (
-              <div key={item?.id}>
+              <div key={item.id}>
                 <h3>{item.title}</h3>
                 <p>{item.description || "Descrição não disponível"}</p>
                 <p><strong>Categoria:</strong> {item.categoryId}</p>
-                <p><strong>Preço:</strong> {formatPrice(item.price)}</p>
+                <p><strong>Preço:</strong> {item.price}</p>
                 <p><strong>Quantidade:</strong> {item.quantity} disponível(s)</p>
-
-                {/* Link para detalhes do item */}
-                <ItemLink id={item.id} title={item.title} price={item.price} quantity={item.quantity} categoryId={item.categoryId} description={item.description} />
               </div>
-            ))}
+            ))
+          ) : (
+            <p>Nenhum item encontrado.</p>  /* Caso não haja itens */
+          )}
         </div>
       </div>
     </div>

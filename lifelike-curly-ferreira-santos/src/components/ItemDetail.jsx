@@ -44,14 +44,14 @@ function ItemDetail() {
     const newQuantity = Number(e.target.value);
 
     // Evitar que a quantidade seja maior que a quantidade disponível
-    if (newQuantity >= 1 && newQuantity <= item.Quantity) {
+    if (newQuantity >= 1 && newQuantity <= item.quantity) {
       setQuantity(newQuantity);
     }
   };
 
   const handleAddItem = () => {
     // Verificar se a quantidade solicitada é menor ou igual à quantidade disponível
-    if (quantity <= item.Quantity) {
+    if (quantity <= item.quantity) {
       dispatch({
         type: "addItem",
         item: { ...item, quantity },
@@ -68,17 +68,17 @@ function ItemDetail() {
         <div>
           <h1>{item.title}</h1>
           <h2>{formatPrice(item.price)}</h2>  {/* Exibindo o preço formatado */}
-          <img src={item.image} alt={item.title} />  {/* Exibindo a imagem do item */}
+          {/*<img src={item.image} alt={item.title />  /* Exibindo a imagem do item */}
           <p>{item.description || "Descrição não disponível."}</p>  {/* Exibindo a descrição */}
           <p><strong>Categoria:</strong> {item.categoryId}</p>  {/* Exibindo a categoria do produto */}
-          <p><strong>Quantidade disponível:</strong> {item.Quantity}</p>  {/* Quantidade disponível no estoque */}
+          <p><strong>Quantidade disponível:</strong> {item.quantity}</p>  {/* Quantidade disponível no estoque */}
           
           <div>
             <input
               value={quantity}
               type="number"
               min="1"
-              max={item.Quantity}  /* Não deixar o usuário escolher uma quantidade maior do que a disponível */
+              max={item.quantity}  /* Não deixar o usuário escolher uma quantidade maior do que a disponível */
               onChange={handleChangeQuantity}
             />
           </div>
