@@ -1,52 +1,65 @@
-import { useContext, useState } from "react";
-import CartContext from "../context/CartContext";
+// CartWidget.js
+import React, { useState } from "react";
+import { useCart } from "../context/CartContext";
 
-function CartWidget({ id, title, quantity }) {  // Renomeado de CartItem para CartWidget
+function CartWidget({ id, title, quantity }) {
   const [isEditing, setEditing] = useState(false);
-  const { cart, dispatch } = useContext(CartContext);
+  const [newQuantity, setNewQuantity] = useState(quantity); // Armazenar a nova quantidade
+  const { dispatch } = useCart();
 
-  const handleRemoveItem = (itemId) => {  // Renomeado de productId para itemId
+  const handleRemoveItem = (itemId) => {
     dispatch({
       type: "removeItem",
-      itemId,  // Renomeado para itemId
+      itemId,
     });
   };
 
   const handleChangeQuantity = (e) => {
-    const newQuantity = Number(e.target.value);
+    const value = parseInt(e.target.value, 10);
+    if (value && value > 0) {
+      setNewQuantity(value); // Atualizar a nova quantidade
+    }
+  };
 
-    dispatch({
-      type: "changeItemQuantity",
-      item: {  // Renomeado para item
-        id,
-        newQuantity,
-      },
-    });
+  const handleConfirmChange = () => {
+    if (newQuantity !== quantity) {
+      dispatch({
+        type: "changeItemQuantity",
+        item: { id, newQuantity },
+      });
+    }
+    setEditing(false); // Volta para o modo de exibição após a confirmação
   };
 
   return (
     <li>
-      {`${title}`}
+      <span>{title}</span>
       {!isEditing && ` X ${quantity}`}
       {isEditing && (
-        <input onChange={handleChangeQuantity} value={quantity} type="number" />
+        <input
+          type="number"
+          min="1"
+          value={newQuantity}
+          onChange={handleChangeQuantity}
+          aria-label={`Alterar a quantidade de ${title}`}
+        />
       )}
-      <button
-        onClick={() => {
-          handleRemoveItem(id);
-        }}
-      >
+      <button onClick={() => handleRemoveItem(id)}>
         Remover
       </button>
       <button
         onClick={() => {
-          setEditing(!isEditing);
+          if (isEditing) {
+            handleConfirmChange();
+          } else {
+            setEditing(true);
+          }
         }}
       >
-        {!isEditing ? "Editar" : "Confirmar"}
+        {isEditing ? "Confirmar" : "Editar"}
       </button>
     </li>
   );
 }
 
-export { CartWidget };  // Renomeado para CartWidget
+export { CartWidget };

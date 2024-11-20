@@ -1,79 +1,46 @@
-import { createContext, useState, useReducer } from "react";
+// CartContext.js
+import { createContext, useReducer, useContext } from 'react';
 
-const CartContext = createContext([]);
+const CartContext = createContext();
 
-import React from "react";
+const initialState = [];
 
-const cartReducer = (cart, action) => {
+const cartReducer = (state, action) => {
   switch (action.type) {
-    case "addItem": {
-      let newCart;
+    case "addItem":
+      const existingItemIndex = state.findIndex(item => item.id === action.item.id);
+      if (existingItemIndex !== -1) {
+        return state.map((item, index) =>
+          index === existingItemIndex
+            ? { ...item, quantity: item.quantity + action.item.quantity }
+            : item
+        );
+      }
+      return [...state, action.item];
 
-      // Checar se o item já existe no carrinho
-      const existsInCart = cart?.some(
-        (cartItem) => cartItem.id === action.item.id
+    case "removeItem":
+      return state.filter(item => item.id !== action.itemId);
+
+    case "changeItemQuantity":
+      return state.map(item =>
+        item.id === action.item.id
+          ? { ...item, quantity: action.item.newQuantity }
+          : item
       );
-
-      newCart = [...cart, action.item];
-
-      console.log({ existsInCart });
-
-      localStorage.setItem("cart", JSON.stringify(newCart));
-      return newCart;
-    }
-
-    case "removeItem": {
-      const filteredCart = cart.filter(
-        (item) => item.id !== action.itemId
-      );
-      localStorage.setItem("cart", JSON.stringify(filteredCart));
-      return filteredCart;
-    }
-
-    case "changeItemQuantity": {
-      const updatedCart = cart.map((item) => {
-        if (item.id !== action.item.id) {
-          return item;
-        }
-        if (item.id === action.item.id) {
-          return {
-            ...item,
-            quantity: action.item.newQuantity,
-          };
-        }
-      });
-
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      return updatedCart;
-    }
-
-    case "resetCart": {
-      localStorage.setItem("cart", JSON.stringify([]));
-      return [];
-    }
 
     default:
-      break;
+      return state;
   }
 };
 
-const initializeState = () => {
-  return JSON.parse(localStorage.getItem("cart"));
-};
-
-export function CartProvider({ children }) {
-  const [cart, dispatch] = useReducer(cartReducer, initializeState() || []);
-
+export const CartProvider = ({ children }) => {
+  const [cart, dispatch] = useReducer(cartReducer, initialState);
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        dispatch,
-      }}
-    >
+    <CartContext.Provider value={{ cart, dispatch }}>
       {children}
     </CartContext.Provider>
   );
-}
+};
 
-export default CartContext;
+export const useCart = () => useContext(CartContext);
+export { CartContext };

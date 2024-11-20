@@ -1,19 +1,21 @@
 import React from "react";
 
-export default function ItemTable({ children }) {
+const ItemTable = ({ children }) => {
   return (
     <table>
       <thead>
         <tr>
-          <th scope="col">Quantity</th>
-          <th scope="col">Item Name</th>
-          <th scope="col">Total</th>
-          <th scope="col">Action</th>
+          <th>Quantidade</th>
+          <th>Título</th>
+          <th>Total</th>
+          <th>Categoria</th>
+          <th>Descrição</th>
+          <th>Remover</th>
         </tr>
       </thead>
-      <tbody>
-        {children}
-      </tbody>
+      <tbody>{children}</tbody>
     </table>
   );
-}
+};
+
+export default ItemTable;
